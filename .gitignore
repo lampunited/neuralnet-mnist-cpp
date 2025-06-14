@@ -1,0 +1,29 @@
+# Build artifacts
+/build/
+/CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# Executables and binaries
+*.exe
+*.lib
+*.dll
+*.obj
+
+# Visual Studio project files
+*.sln
+*.vcxproj*
+*.vcxproj.filters
+*.opensdf
+*.sdf
+*.user
+
+# Cache and logs
+*.log
+
+# Trained model weights
+trained_weights.bin
+
+# MNIST data
+/data/
