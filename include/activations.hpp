@@ -1,37 +1,40 @@
-#ifndef ACTIVATIONS_HPP
-#define ACTIVATIONS_HPP
-
+#pragma once
 #include "layer.hpp"
 #include <vector>
+#include <algorithm>
+#include <cmath>
 
 class ReLU : public Layer {
 public:
-    ReLU() = default;
-    ~ReLU() override = default;
+    std::vector<double> forward(const std::vector<double>& in) override {
+        input_cache_ = in;
+        std::vector<double> out(in.size());
+        for (size_t i = 0; i < in.size(); ++i) {
+            out[i] = std::max(0.0, in[i]);
+        }
+        return out;
+    }
 
-    std::vector<double> forward(const std::vector<double>& input) override;
-    std::vector<double> backward(const std::vector<double>& grad_output) override;
-    void update_weights(double) override {}  // no parameters in ReLU
+    std::vector<double> backward(const std::vector<double>& grad_output) override {
+        std::vector<double> grad(grad_output.size());
+        for (size_t i = 0; i < grad.size(); ++i) {
+            grad[i] = (input_cache_[i] > 0.0 ? grad_output[i] : 0.0);
+        }
+        return grad;
+    }
+
+    void update_weights(double) override {}  
+    void zero_grad() override {}            
 
 private:
-    std::vector<double> mask_;  // tracks which inputs > 0
+    std::vector<double> input_cache_;
 };
 
 class Softmax : public Layer {
 public:
-    Softmax() = default;
-    ~Softmax() override = default;
-
-    // Forward: compute probabilities
-    std::vector<double> forward(const std::vector<double>& input) override;
-
-    // Backward: for cross-entropy with Softmax, gradient is (output - target),
-    // but here we simply pass through grad_output as-is because Net.train does softmax+CE in one step.
+    std::vector<double> forward(const std::vector<double>& in) override;
     std::vector<double> backward(const std::vector<double>& grad_output) override;
-    void update_weights(double) override {}  // no parameters in Softmax
 
-private:
-    std::vector<double> output_cache_;  // stores softmax output
+    void update_weights(double) override {}
+    void zero_grad() override {}
 };
-
-#endif // ACTIVATIONS_HPP

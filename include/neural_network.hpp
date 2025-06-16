@@ -1,25 +1,22 @@
-#ifndef NEURAL_NETWORK_HPP
-#define NEURAL_NETWORK_HPP
-
+// include/neural_network.hpp
+#pragma once
+#include "layer.hpp"
 #include <vector>
 #include <string>
-#include "layer.hpp"
 
 class NeuralNetwork {
 public:
-    NeuralNetwork() = default;
     ~NeuralNetwork();
-
-    // Add a layer (caller is responsible for `new`-ing it)
+    const std::vector<Layer*>& get_layers() const { return layers_; }
     void add_layer(Layer* layer);
 
-    // Forward pass (returns probabilities from Softmax)
     std::vector<double> predict(const std::vector<double>& input);
 
-    // Train on (inputs, one-hot targets) using SGD + cross-entropy
     void train(const std::vector<std::vector<double>>& inputs,
                const std::vector<std::vector<double>>& targets,
-               int epochs, double learning_rate);
+               int epochs,
+               double learning_rate,
+               int batch_size = 1);
 
     void save_weights(const std::string& filepath) const;
     void load_weights(const std::string& filepath);
@@ -27,5 +24,3 @@ public:
 private:
     std::vector<Layer*> layers_;
 };
-
-#endif // NEURAL_NETWORK_HPP
