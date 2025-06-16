@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(neuralnet_mnist_cpp)
 
-# For std::thread (used by httplib)
 find_package(Threads REQUIRED)
 
-# Core library with all model & utility code
 add_library(mnist_core
     src/neural_network.cpp
     src/layer_dense.cpp
@@ -13,12 +11,10 @@ add_library(mnist_core
     src/mnist_loader.cpp
     src/evaluate.cpp
 )
-# Make headers in include/ public to anything linking mnist_core
 target_include_directories(mnist_core PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Training executable (the one with main.cpp)
 add_executable(neuralnet
     main.cpp
 )
@@ -30,7 +26,6 @@ target_link_libraries(neuralnet PRIVATE
     Threads::Threads
 )
 
-# Evaluation-only executable
 add_executable(neuralnet_eval
     eval.cpp
 )
@@ -42,7 +37,6 @@ target_link_libraries(neuralnet_eval PRIVATE
     Threads::Threads
 )
 
-# Server executable
 add_executable(classifier_server
     src/server/classifier_server.cpp
 )

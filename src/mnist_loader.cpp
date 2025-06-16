@@ -17,8 +17,6 @@ void load_mnist_data(const std::string& image_path,
                      std::vector<std::vector<double>>& images,
                      std::vector<std::vector<double>>& labels)
 {
-    std::cout << "[DEBUG] Entering load_mnist_data()\n";
-    std::cout << "[DEBUG] Attempting to open files...\n";
 
     std::ifstream ifs_images(image_path, std::ios::binary);
     std::ifstream ifs_labels(label_path, std::ios::binary);
